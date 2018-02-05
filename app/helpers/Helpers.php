@@ -52,7 +52,7 @@ class Helpers
          if ($selected == $value->Tahun) {
             $dataBulan.='<option value="'.$value->Tahun.'" selected>'.$value->Tahun.'</option>';
          } else {
-            $dataBulan.='<option value="'.$value->Tahun.'" >'.$value->Tahun.'</option>';
+            $dataBulan.='<option value="'.$value->Tahun.'">'.$value->Tahun.'</option>';
             
          }
       }
