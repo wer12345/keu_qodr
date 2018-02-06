@@ -61,23 +61,21 @@ class RefAkun extends \Phalcon\Mvc\Model
 
    public function getData() 
    {
-
-
-      $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, date_format(h.tanggal, '%Y-%m') as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
+      $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.tanggal as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
       $query = $this->modelsManager->executeQuery($sql);
 
-      $data = array();
-      $no = $requestData['start']+1;
+      $data  = array();
+      $no    = $requestData['start']+1;
 
       foreach($query as $key => $value) {
-         $dataAkun = array();
+         $dataAkun   = array();
          $dataAkun[] = $no;
          $dataAkun[] = date("F, Y", strtotime($value->Bulan));
          $dataAkun[] = $value->Kode;
          $dataAkun[] = $value->a->nama;
          $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
 
-         $data[] = $dataAkun;
+         $data[]     = $dataAkun;
          $no++;
       }
 
@@ -107,14 +105,14 @@ class RefAkun extends \Phalcon\Mvc\Model
       $no = $requestData['start']+1;
 
       foreach($query as $key => $value) {
-         $dataAkun = array();
+         $dataAkun   = array();
          $dataAkun[] = $no;
          $dataAkun[] = date("F, Y", strtotime($value->Bulan));
          $dataAkun[] = $value->Kode;
          $dataAkun[] = $value->a->nama;
          $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
 
-         $data[] = $dataAkun;
+         $data[]     = $dataAkun;
          $no++;
       }
 
@@ -134,24 +132,23 @@ class RefAkun extends \Phalcon\Mvc\Model
       if ($Tahun != '') {
          $Tahun.= '%';
          $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id AND h.tanggal like '$Tahun' GROUP BY Kode";
-
       } else {
          $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Kode";
       }
 
       $query = $this->modelsManager->executeQuery($sql);
 
-      $data = array();
-      $no = $requestData['start']+1;
+      $data  = array();
+      $no    = $requestData['start']+1;
 
       foreach($query as $key => $value) {
-         $dataAkun = array();
+         $dataAkun   = array();
          $dataAkun[] = $no;
          $dataAkun[] = $value->Kode;
          $dataAkun[] = $value->a->nama;
          $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
 
-         $data[] = $dataAkun;
+         $data[]     = $dataAkun;
          $no++;
       }
 

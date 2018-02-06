@@ -24,16 +24,18 @@ class Helpers
 
    public function dataBulan($selected =  null)
    {
+      $namaBulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+
       $Bulan = KeuHarian::find([
-         'columns' => 'DATE_FORMAT(tanggal, "%Y-%m") AS Bulan',
+         'columns' => 'DATE_FORMAT(tanggal, "%m") AS Bulan',
          'group' => 'Bulan'
       ]);
       $dataBulan = '<option value="">- Pilih Bulan -</option>';
       foreach ($Bulan as $key => $value) {
-         if ($selected == date("m", strtotime($value->Bulan))) {
-            $dataBulan.='<option value="'.date("m", strtotime($value->Bulan)).'" selected>'.date('F', strtotime($value->Bulan)).'</option>';
+         if ($selected == $value->Bulan) {
+            $dataBulan.='<option value="'.$value->Bulan.'" selected>'.$namaBulan[$value->Bulan-1].'</option>';
          } else {
-            $dataBulan.='<option value="'.date('m',strtotime($value->Bulan)).'" >'.date('F',strtotime($value->Bulan)).'</option>';
+            $dataBulan.='<option value="'.$value->Bulan.'" >'.$namaBulan[$value->Bulan-1].'</option>';
             
          }
       }
