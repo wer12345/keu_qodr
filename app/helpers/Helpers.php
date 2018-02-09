@@ -36,30 +36,46 @@ class Helpers
             $dataBulan.='<option value="'.$value->Bulan.'" selected>'.$namaBulan[$value->Bulan-1].'</option>';
          } else {
             $dataBulan.='<option value="'.$value->Bulan.'" >'.$namaBulan[$value->Bulan-1].'</option>';
-            
-         }
-      }
-      return $dataBulan;
 
-   }
-   
-   public function dataTahun($selected =  null)
-   {
-      $Bulan = KeuHarian::find([
-         'columns' => 'DATE_FORMAT(tanggal, "%Y") AS Tahun',
-         'group' => 'Tahun'
-      ]);
-      $dataBulan = '<option value="">- Pilih Tahun -</option>';
-      foreach ($Bulan as $key => $value) {
-         if ($selected == $value->Tahun) {
-            $dataBulan.='<option value="'.$value->Tahun.'" selected>'.$value->Tahun.'</option>';
-         } else {
-            $dataBulan.='<option value="'.$value->Tahun.'">'.$value->Tahun.'</option>';
-            
          }
-      }
-      return $dataBulan;
+         }
+         return $dataBulan;
 
-   }
-}
+      }
+
+      public function dataTahun($selected =  null)
+      {
+         $Bulan = KeuHarian::find([
+            'columns' => 'DATE_FORMAT(tanggal, "%Y") AS Tahun',
+            'group' => 'Tahun'
+         ]);
+         $dataBulan = '<option value="">- Pilih Tahun -</option>';
+         foreach ($Bulan as $key => $value) {
+            if ($selected == $value->Tahun) {
+               $dataBulan.='<option value="'.$value->Tahun.'" selected>'.$value->Tahun.'</option>';
+            } else {
+               $dataBulan.='<option value="'.$value->Tahun.'">'.$value->Tahun.'</option>';
+
+            }
+            }
+            return $dataBulan;
+
+         }
+
+         public function curlget($url)
+         {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+               CURLOPT_RETURNTRANSFER => 1,
+               CURLOPT_URL => $url
+
+            ));
+            $res = curl_exec($curl);
+            curl_close($curl);
+            return $res;
+
+         }
+
+
+      }
 ?>

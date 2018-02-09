@@ -61,82 +61,38 @@ class RefAkun extends \Phalcon\Mvc\Model
 
    public function getData() 
    {
+      $requestData = $_REQUEST;
+      //echo "<pre>".print_r($requestData,1)."</pre>";
+      //die();
+      $requestSearch = strtoupper($requestData['search']['value']);
+
+      $columns = array(
+         0 => 'Bulan',
+         1 => 'Kode',
+         2 => 'Nama',
+         3 => 'Nominal'
+      );
+
       $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.tanggal as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
       $query = $this->modelsManager->executeQuery($sql);
+      $totalData = count($query);
+      $totalFiltered = $totalData;  
+      $start = $_REQUEST['start'];
 
-      $data  = array();
-      $no    = $requestData['start']+1;
+      if (!empty($requestSearch)) {
+         // function mencari data
+         $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.tanggal as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id '%".$requestSearch."%'";
+         $query = $this->modelsManager->executeQuery($sql);
+         $totalFiltered = count($query);
 
-      foreach($query as $key => $value) {
-         $dataAkun   = array();
-         $dataAkun[] = $no;
-         $dataAkun[] = date("F, Y", strtotime($value->Bulan));
-         $dataAkun[] = $value->Kode;
-         $dataAkun[] = $value->a->nama;
-         $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
-
-         $data[]     = $dataAkun;
-         $no++;
-      }
-
-      $json_data = array(
-         "draw"            => intval( $requestData['draw'] ),
-         "recordsTotal"    => intval( $totalData ),
-         "recordsFiltered" => intval( $totalFiltered ),
-         "data"            => $data
-      );
-
-      return $json_data;
-   }
-
-   /**
-    * undocumented function
-    *
-    * @return void
-    */
-   public function filter($Bulan, $Tahun)
-   {
-      $filter = $Tahun.'-'.$Bulan.'-%';
-
-      $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, date_format(h.tanggal, '%Y-%m') as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id AND h.tanggal LIKE '$filter' GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
-      $query = $this->modelsManager->executeQuery($sql);
-
-      $data = array();
-      $no = $requestData['start']+1;
-
-      foreach($query as $key => $value) {
-         $dataAkun   = array();
-         $dataAkun[] = $no;
-         $dataAkun[] = date("F, Y", strtotime($value->Bulan));
-         $dataAkun[] = $value->Kode;
-         $dataAkun[] = $value->a->nama;
-         $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
-
-         $data[]     = $dataAkun;
-         $no++;
-      }
-
-      $json_data = array(
-         "draw"            => intval( $requestData['draw'] ),
-         "recordsTotal"    => intval( $totalData ),
-         "recordsFiltered" => intval( $totalFiltered ),
-         "data"            => $data
-      );
-
-      return $json_data;
-   }
-
-   public function getDataTahun($Tahun = '') 
-   {
-
-      if ($Tahun != '') {
-         $Tahun.= '%';
-         $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id AND h.tanggal like '$Tahun' GROUP BY Kode";
+         //$sql.= "GROUP BY Bulan, h.akun_id ORDER BY". $columns[$requestData['orderVp']];
+         $sql.=" ORDER BY ". $columns[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir']."   LIMIT ".$requestData['start']." ,".$requestData['length']."   ";  
+         $query = $this->modelsManager->executeQuery($sql);
       } else {
-         $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Kode";
+         // function bila tidak ada yang dicari   
+         $sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.tanggal as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
+         $query = $this->modelsManager->executeQuery($sql);
       }
-
-      $query = $this->modelsManager->executeQuery($sql);
 
       $data  = array();
       $no    = $requestData['start']+1;
@@ -144,6 +100,7 @@ class RefAkun extends \Phalcon\Mvc\Model
       foreach($query as $key => $value) {
          $dataAkun   = array();
          $dataAkun[] = $no;
+         $dataAkun[] = date("F, Y", strtotime($value->Bulan));
          $dataAkun[] = $value->Kode;
          $dataAkun[] = $value->a->nama;
          $dataAkun[] = "Rp ".number_format(abs($value->Nominal));
@@ -153,13 +110,115 @@ class RefAkun extends \Phalcon\Mvc\Model
       }
 
       $json_data = array(
-         "draw"            => intval( $requestData['draw'] ),
-         "recordsTotal"    => intval( $totalData ),
-         "recordsFiltered" => intval( $totalFiltered ),
+         "draw"            => intval($_REQUEST['draw']),
+         "recordsTotal"    => intval($totalData),
+         "recordsFiltered" => intval($totalFiltered),
          "data"            => $data
       );
 
       return $json_data;
-   }
+      }
 
-}
+      /**
+       * undocumented function
+       *
+       * @return void
+       */
+      public function filter($Bulan, $Tahun)
+      {
+         //$requestData = $_REQUEST;
+         //$requestSearch = strtoupper($requestData['search']['value']);
+
+         ////echo "<pre>".print_r($requestData,1)."</pre>";
+         ////die();
+         //$columns = array(
+         //0 => 'Bulan',
+         //1 => 'Kode',
+         //2 => 'Nama',
+         //3 => 'Nominal'
+         //);
+
+         //$totalData = count($query);
+         //$totalFiltered = $totalData;  
+         //$start = $_REQUEST['start'];
+
+         //$filter = $Tahun.'-'.$Bulan.'-%';
+
+         //$sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, date_format(h.tanggal, '%Y-%m') as Bulan, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id AND h.tanggal LIKE '$filter' GROUP BY Bulan, h.akun_id ORDER BY Bulan DESC";
+         //$query = $this->modelsManager->executeQuery($sql);
+
+         //$data = array();
+         //$no = $start+1;
+
+         //foreach($query as $key => $value) {
+         //$dataAkun   = array();
+         //$dataAkun[] = $no;
+         //$dataAkun[] = date("F, Y", strtotime($value->Bulan));
+         //$dataAkun[] = $value->Kode;
+         //$dataAkun[] = $value->a->nama;
+         //$dataAkun[] = "Rp ".number_format(abs($value->Nominal));
+
+         //$data[]     = $dataAkun;
+         //$no++;
+         //}
+
+         //$json_data = array(
+         //"draw"            => intval( $requestData['draw'] ),
+         //"recordsTotal"    => intval( $totalData ),
+         //"recordsFiltered" => intval( $totalFiltered ),
+         //"data"            => $data
+         //);
+
+         //return $json_data;
+      }
+
+      public function getDataTahun($Tahun = '') 
+      {
+         //$requestData = $_REQUEST;
+         //$requestSearch = strtoupper($requestData['search']['value']);
+
+         //$columns = array(
+         //0 => 'Bulan',
+         //1 => 'Kode',
+         //2 => 'Nama',
+         //3 => 'Nominal'
+         //);
+
+         //$totalData = count($query);
+         //$totalFiltered = $totalData;  
+         //$start = $requestData['start'];
+
+         //if ($Tahun != '') {
+         //$Tahun.= '%';
+         //$sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id AND h.tanggal like '$Tahun' GROUP BY Kode";
+         //} else {
+         //$sql = "SELECT a.*, SUM(h.debit)-SUM(h.kredit) as Nominal, h.akun_id as Kode FROM RefAkun a, KeuHarian h WHERE h.akun_id = a.id GROUP BY Kode";
+         //}
+
+         //$query = $this->modelsManager->executeQuery($sql);
+
+         //$data  = array();
+         //$no    = $requestData['start']+1;
+
+         //foreach($query as $key => $value) {
+         //$dataAkun   = array();
+         //$dataAkun[] = $no;
+         //$dataAkun[] = $value->Kode;
+         //$dataAkun[] = $value->a->nama;
+         //$dataAkun[] = "Rp ".number_format(abs($value->Nominal));
+
+         //$data[]     = $dataAkun;
+         //$no++;
+         //}
+
+         //$json_data = array(
+         //"draw"            => intval( $requestData['draw'] ),
+         //"recordsTotal"    => intval( $totalData ),
+         //"recordsFiltered" => intval( $totalFiltered ),
+         //"data"            => $data
+         //);
+
+         //return $json_data;
+      }
+
+   }

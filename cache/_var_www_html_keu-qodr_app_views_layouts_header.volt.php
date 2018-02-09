@@ -11,10 +11,6 @@
 <?= $this->tag->stylesheetLink('assets/bower_components/Ionicons/css/ionicons.min.css') ?>
   <!-- DataTables -->
 <?= $this->tag->stylesheetLink('assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') ?>
-  <!-- daterange picker -->
-<?= $this->tag->stylesheetLink('assets/bower_components/bootstrap-daterangepicker/daterangepicker.css') ?>
-  <!-- bootstrap datepicker -->
-<?= $this->tag->stylesheetLink('assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') ?>
   <!-- Theme style -->
 <?= $this->tag->stylesheetLink('assets/dist/css/AdminLTE.min.css') ?>
   <!-- AdminLTE Skins. Choose a skin from the css/skins

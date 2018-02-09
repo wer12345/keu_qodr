@@ -145,7 +145,7 @@ class KeuHarian extends \Phalcon\Mvc\Model
        $query = $this->modelsManager->executeQuery($sql);
 
        $data  = array();
-       $no    = $requestData['start']+1;
+       $no    = 1;
 
        foreach($query as $key => $value) {
           $dataKeuHarian   = array();
@@ -168,9 +168,9 @@ class KeuHarian extends \Phalcon\Mvc\Model
        }
 
        $json_data = array(
-          "draw"            => intval( $requestData['draw'] ),
-          "recordsTotal"    => intval( $totalData ),
-          "recordsFiltered" => intval( $totalFiltered ),
+          //"draw"            => intval( $requestData['draw'] ),
+          //"recordsTotal"    => intval( $totalData ),
+          //"recordsFiltered" => intval( $totalFiltered ),
           "data"            => $data
        );
 

@@ -10,22 +10,22 @@ class RekapakunController extends \Phalcon\Mvc\Controller
 
    public function getAjaxBulanAction()
    {
-      $akun  = new RefAkun();
-      $Bulan = '%';
-      if (!empty($_POST["Bulan"])) {
-         $Bulan = $this->request->getPost("Bulan");
-      }
+      $akun  = new ViewRekapAkun();
+      //$Bulan = '%';
+      //if (!empty($_POST["Bulan"])) {
+         //$Bulan = $this->request->getPost("Bulan");
+      //}
 
-      $Tahun = '%';
-      if (!empty($_POST["Tahun"])) {
-         $Tahun = $this->request->getPost("Tahun");
-      }
+      //$Tahun = '%';
+      //if (!empty($_POST["Tahun"])) {
+         //$Tahun = $this->request->getPost("Tahun");
+      //}
 
-      if ($Bulan != '' || $Tahun != '') {
-         $json_data = $akun->filter($Bulan, $Tahun);
-      } else {
-         $json_data = $akun->getData();
-      }
+      //if ($Bulan != '' || $Tahun != '') {
+         //$json_data = $akun->filter($Bulan, $Tahun);
+      //} else {
+         $json_data = $akun->getRekapData();
+      //}
 
       die(json_encode($json_data));
    }
@@ -40,5 +40,18 @@ class RekapakunController extends \Phalcon\Mvc\Controller
 
       die(json_encode($json_data));
    }
+
+   /**
+    * undocumented function
+    *
+    * @return void
+    */
+   public function getDataAction()
+   {
+      $curl = new Helpers();
+      $res = $curl->curlget('http://localhost/keu-qodr/rekapakun/getAjaxBulan');
+      die($res);
+   }
+   
 }
 

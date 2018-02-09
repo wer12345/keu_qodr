@@ -15,8 +15,3 @@
 {{ javascript_include("assets/pnotify/pnotify.js") }}
 {{ javascript_include("assets/pnotify/pnotify.buttons.js") }}
 {{ javascript_include("assets/pnotify/pnotify.nonblock.js") }}
-<!-- date-range-picker -->
-{{ javascript_include("assets/bower_components/moment/min/moment.min.js") }}
-{{ javascript_include("assets/bower_components/bootstrap-daterangepicker/daterangepicker.js") }}
-<!-- bootstrap datepicker -->
-{{ javascript_include("assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js") }}

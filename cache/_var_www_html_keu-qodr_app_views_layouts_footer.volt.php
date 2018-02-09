@@ -15,8 +15,3 @@
 <?= $this->tag->javascriptInclude('assets/pnotify/pnotify.js') ?>
 <?= $this->tag->javascriptInclude('assets/pnotify/pnotify.buttons.js') ?>
 <?= $this->tag->javascriptInclude('assets/pnotify/pnotify.nonblock.js') ?>
-<!-- date-range-picker -->
-<?= $this->tag->javascriptInclude('assets/bower_components/moment/min/moment.min.js') ?>
-<?= $this->tag->javascriptInclude('assets/bower_components/bootstrap-daterangepicker/daterangepicker.js') ?>
-<!-- bootstrap datepicker -->
-<?= $this->tag->javascriptInclude('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') ?>

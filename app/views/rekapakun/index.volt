@@ -36,7 +36,7 @@
                      </div>
                      <!--[> /.box-header <]-->
                      <div class="box-body">
-                        <table id="data_akun_perbulan" class="table table-bordered table-striped">
+                        <table id="data_akun_perbulan1" class="table table-bordered table-striped">
                            <thead>
                               <tr>
                                  <th>No.</th>
@@ -47,49 +47,52 @@
 
                               </tr>
                            </thead>
+                           <tbody>
+                           
+                           </tbody>
                         </table>
                      </div>
                      <!--[> /.box-body <]-->
+                  </div>
                </div>
-            </div>
                <!-- /.tab-pane -->
-               <div class="tab-pane" id="tab_2-2">
-                  <div class="box box-primary">
-                     <div class="box-header">
-                        <div class="box-header with-border">
-                           <h3 class="box-title">Filter</h3>
-                        </div>
-                        <div class="box-body">
-                           <!--[> Date <]-->
-                           <div class="row">
-                              <div class="col-xs-12">
-                                 <select name="filterTahun" id="filterTahun" class="form-control text-center">
-                                    {{ Helpers.dataTahun() }}
-                                 </select>
-                              </div>
-                           </div>
-                           <!--[> /.form group <]-->
+               <!--<div class="tab-pane" id="tab_2-2">-->
+                  <!--<div class="box box-primary">-->
+                     <!--<div class="box-header">-->
+                        <!--<div class="box-header with-border">-->
+                           <!--<h3 class="box-title">Filter</h3>-->
+                        <!--</div>-->
+                        <!--<div class="box-body">-->
+                           <!--[>[> Date <]<]-->
+                           <!--<div class="row">-->
+                              <!--<div class="col-xs-12">-->
+                                 <!--<select name="filterTahun" id="filterTahun" class="form-control text-center">-->
+                                    <!--{{ Helpers.dataTahun() }}-->
+                                 <!--</select>-->
+                              <!--</div>-->
+                           <!--</div>-->
+                           <!--[>[> /.form group <]<]-->
 
-                        </div>
-                        <!--[> /.box-body <]-->
-                     </div>
-                     <!--[> /.box-header <]-->
-                     <div class="box-body">
-                        <table id="data_akun_pertahun" class="table table-bordered table-striped">
-                           <thead>
-                              <tr>
-                                 <th>No.</th>
-                                 <th>Kode</th>
-                                 <th>Nama</th>
-                                 <th>Nominal</th>
+                        <!--</div>-->
+                        <!--[>[> /.box-body <]<]-->
+                     <!--</div>-->
+                     <!--[>[> /.box-header <]<]-->
+                     <!--<div class="box-body">-->
+                        <!--<table id="data_akun_pertahun" class="table table-bordered table-striped">-->
+                           <!--<thead>-->
+                              <!--<tr>-->
+                                 <!--<th>No.</th>-->
+                                 <!--<th>Kode</th>-->
+                                 <!--<th>Nama</th>-->
+                                 <!--<th>Nominal</th>-->
 
-                              </tr>
-                           </thead>
-                        </table>
-                     </div>
-                     <!--[>[> /.box-body <]<]-->
-               </div>
-            </div>
+                              <!--</tr>-->
+                           <!--</thead>-->
+                        <!--</table>-->
+                     <!--</div>-->
+                     <!--[>[>[> /.box-body <]<]<]-->
+                  <!--</div>-->
+               <!--</div>-->
                <!-- /.tab-pane -->
             </div>
             <!-- /.tab-content -->
@@ -101,18 +104,23 @@
    <script>
 
       $(document).ready(function() {
-
-         $('#data_akun_perbulan').DataTable({
+         $('#data_akun_perbulan1').dataTable({
+            "processing": true,
+            "serverside": true,
             "autoWidth": false,
             "ajax": {
-               url: "rekapakun/getAjaxBulan",
+               url: "Rekapakun/getAjaxBulan",
+               type: "POST"
             }
-         }),
+         });
 
             $('#data_akun_pertahun').DataTable({
+            "processing": true,
+               "serverside": true,
                "autoWidth": false,
                "ajax": {
-                  url: "rekapakun/getAjaxTahun"
+                  url: "rekapakun/getAjaxTahun",
+                  type: "POST"
                }
             }),
 
@@ -145,13 +153,6 @@
                   }
                })
 
-            }),
-
-
-            $('#data_akun_perbulan tbody').on( 'click', 'tr', function () {
-               var table = $('#data_akun_perbulan').DataTable();
-               console.log( table.row( this  ).data()  );
-
-            }  );
+            });
       })
    </script>
